@@ -2,13 +2,24 @@ import http from 'http'
 import process from 'process'
 import express from 'express'
 
+import { config as env } from 'dotenv'
+
+import morgan from './http/middlewares/morgan.js'
+import api from './routes/api.js'
+import Logger from './utils/logger.js'
+
+env()
+
 const app = express()
 
 app.use(express.json())
+app.use(morgan)
+app.use(api)
 
 const server = http.createServer(app)
 
 server.listen(process.env.PORT)
+Logger.info(`Server is running on port ${process.env.PORT}`)
 
 const shutdownConfig = {
     timeout: 40000,
